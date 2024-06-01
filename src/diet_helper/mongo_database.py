@@ -11,7 +11,6 @@ class MongoManager:
         print("Connected to MongoDB")
         return client
 
-
     def insert_food(self, name=str, p=str, f=str, c=str) -> str:
         try: 
             self.food_collection.insert_one({"_id": self.food_collection.count_documents(), "name":name.lower(), "p":p, "f":f, "c":c, "variants":None})
@@ -119,7 +118,20 @@ class MongoManager:
         else:
             return "Exited with 'exit' command"
 
-            
+    
+    def delete_food(self, food_name=str) -> str:
+        food_name = food_name.lower()
+        try:
+            if self.food_collection.find({"name":food_name}).count() == 0:
+                return "There is no such food in database"
+            else:
+                if input(f"Are you sure you want to delete {food_name}? (y/n)")[0].lower() == 'y':
+                    self.food_collection.delete_one({"name":food_name})
+                    return f"{food_name} was deleted"
+                else:
+                    return "User did not confirm deletion"
+        except Exception as e:
+            return "There was an error while deleting food: " + str(e)
         
 
     def close(self) -> None:
