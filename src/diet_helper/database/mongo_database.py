@@ -24,24 +24,16 @@ class MongoManager:
             return "There was an error while getting collection: " + str(e)
     
 
-    def insert_food(self, name=str, p=str, f=str, c=str) -> str:
+    def insert_food(self, name=str, p=str != None, f=str != None, c=str != None, variants=None) -> str:
         food_collection = self.get_collection()
         try: 
-            food_collection.insert_one({"_id": food_collection.count_documents(), "name":name.lower(), "p":p, "f":f, "c":c, "variants":None})
+            food_collection.insert_one({"_id": food_collection.count_documents(), "name":name.lower(), "p":p, "f":f, "c":c, "variants":variants})
             self.close_connection()
             return f"{name} added to database with p: {p}, f: {f}, c: {c}"
         except Exception as e:
             self.close_connection()
             return "There was an error while adding new food: " + str(e)
     
-
-    def variant_correctness_check (self, variants=dict) -> bool:
-        for weight in variants.values():
-            try :
-                int(weight)
-            except:
-                return False
-        return True
 
     def add_variant(self, food_name=str, new_variant=dict) -> str:
         if not self.variant_correctness_check(new_variant):
@@ -91,7 +83,52 @@ class MongoManager:
         except Exception as e:
             self.close_connection()
             return "There was an error while adding new variant to food: " + str(e)
+
+    def update_food(self, name=str, p=None, f=None, c=None) -> str:
+        if p is None and f is None and c is None:
+            return "Nothing to update"
+        food_collection = self.get_collection()
+        try:
+            name = name.lower()
+            if p is not None:
+                p = str(p)
+                self.updateProteins(food_collection, name,p)
+            if f is not None:
+                f = str(f)
+                self.updateFats(food_collection, name,f)
+            if c is not None:
+                c = str(c)
+                self.updateCarbs(food_collection, name,c)
+            self.close_connection()
+            return f"{name} updated"
+        except Exception as e:
+            self.close_connection()
+            return "There was an error while updating food: " + str(e)
+
+
+    def updateProteins(self,food_collection, name=str, p=str) -> str:
+        try:
+            food_collection.update_one({"name":name}, {"$set":{"p":p}})
+            return f"{name} updated, now it has {p} proteins"
+        except Exception as e:
+            return "There was an error while updating protein: " + str(e)
     
+
+    def updateFats(self,food_collection, name=str, f=str) -> str:
+        try:
+            food_collection.update_one({"name":name}, {"$set":{"f":f}})
+            return f"{name} updated, now it has {f} fats"
+        except Exception as e:
+            return "There was an error while updating fats: " + str(e)
+    
+
+    def updateCarbs(self,food_collection, name=str, c=str) -> str:
+        try:
+            food_collection.update_one({"name":name}, {"$set":{"c":c}})
+            return f"{name} updated, now it has {c} carbs"
+        except Exception as e:
+            return "There was an error while updating carbs: " + str(e)
+        
 
     def update_variant(self, food_name=str, variant_name=str, new_value=str or int) -> str:
         new_value = str(new_value)
@@ -177,3 +214,12 @@ class MongoManager:
             self.client.close()
         except Exception as e:
             print("There was an error while closing connection: " + str(e))
+
+
+    def variant_correctness_check (self, variants=dict) -> bool:
+        for weight in variants.values():
+            try :
+                int(weight)
+            except:
+                return False
+        return True
