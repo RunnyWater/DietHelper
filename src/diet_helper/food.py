@@ -9,7 +9,7 @@ class Food:
         self.carbs = c
         self.variants = variants
 
-    def updateInfo(self, name=None, p=None, f=None, c=None, variants=None) -> str:
+    def update_info(self, name=None, p=None, f=None, c=None, variants=None) -> str:
         if name is not None:
             self.name = name
         if p is not None:
@@ -21,7 +21,24 @@ class Food:
         if variants is not None:
             self.variants = {}
         return f'{self.name} updated'
+
+
+    def get_calories(self, weight) -> int:
+        return round((int(self.proteins) * 4 + int(self.fats) * 9 + int(self.carbs) * 4)*weight, 2)
+
+
+    def get_proteins(self, weight) -> int:
+        return round(int(self.proteins)*weight, 2)
     
+
+    def get_fats(self, weight) -> int:
+        return round(int(self.fats)*weight, 2)
+
+
+    def get_carbs(self, weight) -> int:
+        return round(int(self.carbs)*weight, 2)
+    
+
     def add_variant(self, new_variant):
         if self.variants is None:
             self.variants = {}
@@ -32,4 +49,4 @@ class Food:
         return f"Food(name={self.name}, proteins={self.proteins}, fats={self.fats}, carbs={self.carbs}, variants={self.variants})"
     
     def __str__(self) -> str:
-        return self.name
+        return f'{self.name} per 100g: {self.proteins}g of proteins, {self.fats}g of fats, {self.carbs}g of carbs'

@@ -5,12 +5,14 @@ class MongoManager:
         self.con_string = con_string
         self.database_name = database_name
         self.food_collection_name = food_collection_name
-
+        self.connected = False
         self.client = None
 
     def connect_to_database(self):
         try:
-            return pymongo.MongoClient(self.con_string)
+            client = pymongo.MongoClient(self.con_string)
+            self.connected = True
+            return client
         except Exception as e:
             return "There was an error while connecting to database: " + str(e)
 
@@ -210,8 +212,9 @@ class MongoManager:
 
     def close_connection(self) -> None:
         try:
-            print("Closing connection to MongoDB")
             self.client.close()
+            self.connected = False
+            print("Connection was successfully closed")
         except Exception as e:
             print("There was an error while closing connection: " + str(e))
 

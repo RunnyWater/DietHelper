@@ -12,7 +12,8 @@ def main_function():
     db_type = 'mongo'
 
     foods = Foods(CONNECTION_STRING, DATABASE_NAME, COLLECTION_NAME, db_type)
-    print(foods)
+    diet_helper = FoodLister(foods)
+    macro = MacroManager(foods)
 
 
 if __name__ == "__main__":

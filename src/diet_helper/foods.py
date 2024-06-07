@@ -17,7 +17,7 @@ class Foods:
         try: 
             foods = {}
             for food in mongo_list:
-                foods[food['name']] = Food(name=food['name'], p=food['p'], f=food['f'], c=food['c'], variants=food['variants'])
+                foods[food['name'].lower()] = Food(name=food['name'], p=food['p'], f=food['f'], c=food['c'], variants=food['variants'])
             self.__manager.close_connection()
             return foods
         except Exception as e:
@@ -40,5 +40,12 @@ class Foods:
         self.__manager.update_food(name, p, f, c, variants)
         return f"{name} updated"
 
+    def getNames(self):
+        return list(self.foods.keys())
+
     def __repr__(self) -> str:
         return f"{self.foods}"
+    
+
+    def __getitem__(self, key):
+        return self.foods[key]
