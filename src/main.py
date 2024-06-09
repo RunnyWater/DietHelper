@@ -1,4 +1,4 @@
-from diet_helper import MacroManager, FoodLister, Foods
+from diet_helper import MacroManager, FoodLister, Foods, Meal
 
 from dotenv import load_dotenv
 import os
@@ -16,6 +16,7 @@ def main_function():
     foods = Foods(CONNECTION_STRING, DATABASE_NAME, COLLECTION_NAME, db_type)
     diet_helper = FoodLister(foods)
     macro = MacroManager(foods)
+    meal = Meal(foods)
 
 
 if __name__ == "__main__":

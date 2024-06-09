@@ -1,7 +1,5 @@
-from .database import MongoManager
-from .database import JsonManager
-from .macro_helper import MacroManager
-from .diet_helper import FoodLister
+from .food_database import MongoManager
+from .food_database import JsonManager
 from .food import Food
 
 class Foods:
@@ -24,9 +22,11 @@ class Foods:
             self.__manager.close_connection()
             return "There was an error while getting foods: " + str(e)
 
-    def addFood(self, name, p, f, c):
+    def addFood(self, name, p, f, c, variants=None):
         self.foods[name] = Food(name=name, p=p, f=f, c=c)
         self.__manager.insert_food(name, p, f, c)
+        if variants is not None:
+            self.addVariant(name, variants)
         return f"{name} added to database with p: {p}, f: {f}, c: {c}"
 
     def addVariant(self, name, new_variant):
