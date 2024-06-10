@@ -23,19 +23,19 @@ class Food:
         return f'{self.name} updated'
 
 
-    def get_calories(self, weight) -> int:
+    def get_calories(self, weight=1) -> int:
         return round((int(self.proteins) * 4 + int(self.fats) * 9 + int(self.carbs) * 4)*weight, 2)
 
 
-    def get_proteins(self, weight) -> int:
+    def get_proteins(self, weight=1) -> int:
         return round(int(self.proteins)*weight, 2)
     
 
-    def get_fats(self, weight) -> int:
+    def get_fats(self, weight=1) -> int:
         return round(int(self.fats)*weight, 2)
 
 
-    def get_carbs(self, weight) -> int:
+    def get_carbs(self, weight=1) -> int:
         return round(int(self.carbs)*weight, 2)
     
 
@@ -44,6 +44,9 @@ class Food:
             self.variants = {}
         self.variants.update(new_variant)
         return f"{', '.join(new_variant.keys())} added to {self.name}"
+
+    def get_name(self) -> str:
+        return self.name
 
     def __repr__(self) -> str:
         return f"Food(name={self.name}, proteins={self.proteins}, fats={self.fats}, carbs={self.carbs}, variants={self.variants})"
