@@ -11,7 +11,7 @@ class Foods:
         self.foods =self.getFoods()
 
     def getFoods(self):
-        mongo_list = self.__manager.get_collection().find()
+        mongo_list = self.__manager.get_foods()
         try: 
             foods = {}
             for food in mongo_list:

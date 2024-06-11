@@ -26,6 +26,17 @@ class MongoManager:
             return "There was an error while getting collection: " + str(e)
     
 
+    def get_foods(self):
+        food_collection = self.get_collection()
+        try: 
+            foods = food_collection.find()
+            self.close_connection()
+            return foods
+        except Exception as e:
+            self.close_connection()
+            return "There was an error while getting foods: " + str(e)
+
+
     def insert_food(self, name=str, p=str != None, f=str != None, c=str != None, variants=None) -> str:
         food_collection = self.get_collection()
         try: 
