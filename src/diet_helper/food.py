@@ -1,6 +1,3 @@
-from typing import Any
-
-
 class Food:
     def __init__(self, name=str, p=str, f=str, c=str, variants=None):
         self.name = name
@@ -9,7 +6,7 @@ class Food:
         self.carbs = c
         self.variants = variants
 
-    def update_info(self, name=None, p=None, f=None, c=None, variants=None) -> str:
+    def update_info(self, name=str, p=int, f=int, c=int, variants=None) -> str:
         if name is not None:
             self.name = name
         if p is not None:

@@ -105,13 +105,13 @@ class MongoManager:
             name = name.lower()
             if p is not None:
                 p = str(p)
-                self.updateProteins(food_collection, name,p)
+                self.update_proteins(food_collection, name,p)
             if f is not None:
                 f = str(f)
-                self.updateFats(food_collection, name,f)
+                self.update_fats(food_collection, name,f)
             if c is not None:
                 c = str(c)
-                self.updateCarbs(food_collection, name,c)
+                self.update_carbs(food_collection, name,c)
             self.close_connection()
             return f"{name} updated"
         except Exception as e:
@@ -119,7 +119,7 @@ class MongoManager:
             return "There was an error while updating food: " + str(e)
 
 
-    def updateProteins(self,food_collection, name=str, p=str) -> str:
+    def update_proteins(self,food_collection, name=str, p=str) -> str:
         try:
             food_collection.update_one({"name":name}, {"$set":{"p":p}})
             return f"{name} updated, now it has {p} proteins"
@@ -127,7 +127,7 @@ class MongoManager:
             return "There was an error while updating protein: " + str(e)
     
 
-    def updateFats(self,food_collection, name=str, f=str) -> str:
+    def update_fats(self,food_collection, name=str, f=str) -> str:
         try:
             food_collection.update_one({"name":name}, {"$set":{"f":f}})
             return f"{name} updated, now it has {f} fats"
@@ -135,7 +135,7 @@ class MongoManager:
             return "There was an error while updating fats: " + str(e)
     
 
-    def updateCarbs(self,food_collection, name=str, c=str) -> str:
+    def update_carbs(self,food_collection, name=str, c=str) -> str:
         try:
             food_collection.update_one({"name":name}, {"$set":{"c":c}})
             return f"{name} updated, now it has {c} carbs"
@@ -184,7 +184,6 @@ class MongoManager:
                 variant_name=variant_name.strip().lower()
                 if variant_name not in variants.keys() and variant_name != 'exit':
                     print("There is no such food variant in database, please type again, or type 'exit' to exit")
-                    print(variant_name, " WAHJTAAVAFAk")
                 else:
                     break
         if variant_name != 'exit':
