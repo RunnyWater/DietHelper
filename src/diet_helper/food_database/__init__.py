@@ -1,2 +1,2 @@
-from .mongo_database import MongoManager
-from .json_database import JsonManager
+from .mongo_database import MongoFoodManager
+from .json_database import JsonFoodManager

@@ -1,7 +1,7 @@
 import os
 import json 
 
-class JsonManager:
+class JsonFoodManager:
     def __init__(self, json_file_path='json/foods.json'):
         self.json_path = self.get_database(json_file_path)
         self.data = self.load()

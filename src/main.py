@@ -14,11 +14,6 @@ def main_function():
     db_type = 'mongo'
 
     # foods = Foods(CONNECTION_STRING, DATABASE_NAME, COLLECTION_NAME, db_type)
-    foods = Foods()
-    
-    # diet_helper = FoodLister(foods)
-    # macro = MacroManager(foods)
-    # meal = Meal()
 
     
 if __name__ == "__main__":

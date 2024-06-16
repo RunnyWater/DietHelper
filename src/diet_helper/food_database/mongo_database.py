@@ -1,7 +1,7 @@
 import pymongo
 
-class MongoManager:
-    def __init__(self, con_string, database_name, food_collection_name):
+class MongoFoodManager:
+    def __init__(self, con_string, database_name, food_collection_name='foods'):
         self.con_string = con_string
         self.database_name = database_name
         self.food_collection_name = food_collection_name
