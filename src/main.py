@@ -13,7 +13,8 @@ def main_function():
     # Change to your database type
     db_type = 'mongo'
 
-    # foods = Foods(CONNECTION_STRING, DATABASE_NAME, COLLECTION_NAME, db_type)
+    foods = Foods(CONNECTION_STRING, DATABASE_NAME, COLLECTION_NAME, db_type)
+    print(foods.update_variant("egg", "aa", 70))
 
     
 if __name__ == "__main__":

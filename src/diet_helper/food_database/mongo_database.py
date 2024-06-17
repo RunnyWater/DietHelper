@@ -1,7 +1,7 @@
 import pymongo
 
 class MongoFoodManager:
-    def __init__(self, con_string, database_name, food_collection_name='foods'):
+    def __init__(self, con_string, database_name, food_collection_name='food'):
         self.con_string = con_string
         self.database_name = database_name
         self.food_collection_name = food_collection_name
@@ -30,7 +30,6 @@ class MongoFoodManager:
         food_collection = self.get_collection()
         try: 
             foods = food_collection.find()
-            self.close_connection()
             return foods
         except Exception as e:
             self.close_connection()
@@ -40,8 +39,8 @@ class MongoFoodManager:
     def insert_food(self, name=str, p=str != None, f=str != None, c=str != None, variants=None) -> str:
         food_collection = self.get_collection()
         try: 
-            food_collection.insert_one({"_id": food_collection.count_documents(), "name":name.lower(), "p":p, "f":f, "c":c, "variants":variants})
-            self.close_connection()
+            food_collection.insert_one({"_id": food_collection.count_documents({}), "name":name.lower(), "p":p, "f":f, "c":c, "variants":variants})
+            # self.close_connection()
             return f"{name} added to database with p: {p}, f: {f}, c: {c}"
         except Exception as e:
             self.close_connection()
@@ -144,7 +143,7 @@ class MongoFoodManager:
         
 
     def update_variant(self, food_name=str, variant_name=str, new_value=str or int) -> str:
-        new_value = str(new_value)
+        new_value = new_value
         variant_name = variant_name.lower()
         food_collection = self.get_collection()
         try:
@@ -189,7 +188,10 @@ class MongoFoodManager:
         if variant_name != 'exit':
             try:
                 del variants[variant_name.strip().lower()]
-                food_collection.update_one({"name":food_name}, {"$set":{"variants":variants}})
+                if len(variants) != 0:
+                    food_collection.update_one({"name":food_name}, {"$set":{"variants":variants}})
+                else:
+                    food_collection.update_one({"name":food_name}, {"$set":{"variants":None}})
                 self.close_connection()
                 return f"From '{food_name}'-food '{variant_name}'-variant was deleted"
             except  Exception as e:

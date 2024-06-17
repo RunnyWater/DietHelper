@@ -11,7 +11,7 @@ class Foods:
             self.__manager = JsonFoodManager(json_file_path)
             self.foods =self.get_foods_json()
         if self.foods is None:
-            exit('There was an error while gettting foods')
+            exit('There was an error while gettting foods from database')
 
 
     def get_foods_mongo(self):
@@ -20,6 +20,7 @@ class Foods:
             foods = {}
             for food in food_list:
                 foods[food['name'].lower()] = Food(name=food['name'], p=food['p'], f=food['f'], c=food['c'], variants=food['variants'])
+            self.__manager.close_connection()
             return foods
         except Exception as e:
             print( "There was an error while getting foods: " + str(e))
@@ -46,7 +47,20 @@ class Foods:
             return "Variant is not correct, please check it again"
         self.foods[name].add_variant(new_variant)
         return f"{name} updated"
-    
+
+    def update_variant(self, name, variant_name, new_value):
+        name = name.lower()
+        if self.foods[name].update_variant(variant_name, new_value) == '404': 
+            return 'Error code: 404'
+        self.__manager.update_variant(name, variant_name, new_value)
+        return f"{name}, {variant_name} updated to {new_value}"
+
+    def delete_variant(self, name, variant_name):
+        name = name.lower()
+        self.foods[name].delete_variant(variant_name)
+        self.__manager.delete_variant(name, variant_name)
+        return f"{name}, variant {variant_name} deleted"
+
     def update_food(self, name, p=None, f=None, c=None, variants=None):
         name = name.lower()
         self.foods[name].updateInfo(p, f, c, variants)
