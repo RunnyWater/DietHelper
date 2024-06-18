@@ -5,7 +5,6 @@ class Meal:
         self.sum_of_fats = 0
         self.sum_of_carbs = 0
         self.sum_of_calories = 0
-        self.note = ''
 
     def add_food(self, food, weight):
         food_name = food.get_name()
@@ -18,33 +17,38 @@ class Meal:
         self.update_macros(food_name, weight)
         return f"{food_name} added to meal with weight {weight}"
 
-
-    def add_note(self, note):
-        note = str(note)
-        if self.note != '':
-            input = ''
-            while(input not in ['a', 'u', 'exit']):
-                input = input("Do you want 'add to' or 'update' note? (a/u), or type 'exit' if you want to exit").lower()
-            if input == 'u':
-                self.note = note
-            elif input == 'a':
-                self.note = self.note + '\n' + note
-        else:
-            self.note = note
-        return f"Note added to meal: {self.note}"
+    '''
+    Due to it leading to really big memory usage in the long run
+    I do not recommend using note function:
+     - FREE tier MongoDB
+     - Limited memory on your server if you're using other database
+     - notes with very long text
+     If nevertheless you have a need for it, you can use it with note compression package''' # TODO: add connection to note managing package
+    # def add_note(self, note):
+    #     note = str(note)
+    #     if self.note != '':
+    #         input = ''
+    #         while(input not in ['a', 'u', 'exit']):
+    #             input = input("Do you want 'add to' or 'update' note? (a/u), or type 'exit' if you want to exit").lower()
+    #         if input == 'u':
+    #             self.note = note
+    #         elif input == 'a':
+    #             self.note = self.note + '\n' + note
+    #     else:
+    #         self.note = note
+    #     return f"Note added to meal: {self.note}"
 
     
-    def dekete_note(self):
-        if self.note != '':
-            self.note = ''
-            return f"Note deleted from meal"
-        else:
-            return f"No note in meal"
+    # def dekete_note(self):
+    #     if self.note != '':
+    #         self.note = ''
+    #         return f"Note deleted from meal"
+    #     else:
+    #         return f"No note in meal"
         
 
-    def get_note(self):
-        return self.note
-
+    # def get_note(self):
+    #     return self.note
 
 
     def update_weight(self, food_name, new_weight):

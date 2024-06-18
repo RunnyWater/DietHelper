@@ -40,7 +40,6 @@ class MongoFoodManager:
         food_collection = self.get_collection()
         try: 
             food_collection.insert_one({"_id": food_collection.count_documents({}), "name":name.lower(), "p":p, "f":f, "c":c, "variants":variants})
-            # self.close_connection()
             return f"{name} added to database with p: {p}, f: {f}, c: {c}"
         except Exception as e:
             self.close_connection()

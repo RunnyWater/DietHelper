@@ -3,7 +3,7 @@ from .food_database import JsonFoodManager
 from .food import Food
 
 class Foods:
-    def __init__(self, con_string=None, database_name=None, food_collection_name=None, db_type='json', json_file_path='json/foods.json'):
+    def __init__(self, con_string=None, database_name=None, food_collection_name='food', db_type='json', json_file_path='json/foods.json'):
         if db_type == 'mongo':
             self.__manager = MongoFoodManager(con_string, database_name, food_collection_name)
             self.foods = self.get_foods_mongo()

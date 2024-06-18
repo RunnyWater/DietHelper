@@ -9,11 +9,10 @@ def main_function():
     # Change to your connection string and database name
     CONNECTION_STRING = os.getenv('CONNECTION_STRING')
     DATABASE_NAME = os.getenv('DATABASE_NAME')
-    COLLECTION_NAME = os.getenv('COLLECTION_NAME')
     # Change to your database type
     db_type = 'mongo'
 
-    foods = Foods(CONNECTION_STRING, DATABASE_NAME, COLLECTION_NAME, db_type)
+    foods = Foods(CONNECTION_STRING, DATABASE_NAME, db_type=db_type)
     print(foods.update_variant("egg", "aa", 70))
 
     
