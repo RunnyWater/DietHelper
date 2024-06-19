@@ -1,9 +1,16 @@
 import pymongo
+from dotenv import load_dotenv
+import os
 
 class MongoFoodManager:
-    def __init__(self, con_string, database_name, food_collection_name='food'):
-        self.con_string = con_string
-        self.database_name = database_name
+    def __init__(self, con_string=None, database_name=None, food_collection_name='food'):
+        if con_string is None or database_name is None:
+            load_dotenv()
+            # Change to your connection string and database name
+            CONNECTION_STRING = os.getenv('CONNECTION_STRING')
+            DATABASE_NAME = os.getenv('DATABASE_NAME')
+        self.con_string = CONNECTION_STRING
+        self.database_name = DATABASE_NAME
         self.food_collection_name = food_collection_name
         self.connected = False
         self.client = None
@@ -35,6 +42,14 @@ class MongoFoodManager:
             self.close_connection()
             return "There was an error while getting foods: " + str(e)
 
+    def get_food(self, name):
+        food_collection = self.get_collection()
+        try: 
+            food = food_collection.find_one({"name":name.lower()})
+            return food
+        except Exception as e:
+            self.close_connection()
+            return "There was an error while getting food: " + str(e)
 
     def insert_food(self, name=str, p=str != None, f=str != None, c=str != None, variants=None) -> str:
         food_collection = self.get_collection()

@@ -1,3 +1,5 @@
+from .calculator import * 
+
 class Food:
     def __init__(self, name, p, f, c, variants=None):
         self.name = str(name)
@@ -18,22 +20,6 @@ class Food:
         if variants is not None:
             self.variants = {}
         return f'{self.name} updated'
-
-
-    def get_calories(self, weight=1) -> int:
-        return round((int(self.proteins) * 4 + int(self.fats) * 9 + int(self.carbs) * 4)*weight, 2)
-
-
-    def get_proteins(self, weight=1) -> int:
-        return round(int(self.proteins)*weight, 2)
-    
-
-    def get_fats(self, weight=1) -> int:
-        return round(int(self.fats)*weight, 2)
-
-
-    def get_carbs(self, weight=1) -> int:
-        return round(int(self.carbs)*weight, 2)
     
 
     def add_variant(self, new_variant):
@@ -42,6 +28,7 @@ class Food:
         self.variants.update(new_variant)
         return f"{', '.join(new_variant.keys())} added to {self.name}"
 
+
     def update_variant(self, variant_name, new_weight):
         if self.variants is None or variant_name not in list(self.variants.keys()):
             print( f"{self.name} has no variant with name {variant_name}\nPlease choose out of the following: {', '.join(self.variants.keys())}")
@@ -49,6 +36,7 @@ class Food:
         self.variants[variant_name] = new_weight
         return f"variant {self.name} now has {new_weight}"
     
+
     def delete_variant(self, variant_name):
         if self.variants is None:
             return f"food `{self.name}` has no variants"
@@ -57,6 +45,7 @@ class Food:
             self.variants = None
             return f"food `{self.name}` has no variants"
         return f"variant {self.name} now has {self.variants}"
+
 
     def get_name(self) -> str:
         return self.name

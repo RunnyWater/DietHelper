@@ -5,15 +5,8 @@ import os
 
 
 def main_function():
-    load_dotenv()
-    # Change to your connection string and database name
-    CONNECTION_STRING = os.getenv('CONNECTION_STRING')
-    DATABASE_NAME = os.getenv('DATABASE_NAME')
-    # Change to your database type
-    db_type = 'mongo'
-
-    foods = Foods(CONNECTION_STRING, DATABASE_NAME, db_type=db_type)
-    print(foods.update_variant("egg", "aa", 70))
+    test = Foods(db_type='mongo')
+    print(test)    
 
     
 if __name__ == "__main__":

@@ -1,9 +1,17 @@
 import pymongo
+from dotenv import load_dotenv
+import os
+
 
 class MongoMealManager:
-    def __init__(self, con_string, database_name, meal_collection_name='meal'):
-        self.con_string = con_string
-        self.database_name = database_name
+    def __init__(self, con_string=None, database_name=None, meal_collection_name='meal'):
+        if con_string is None or database_name is None:
+            load_dotenv()
+            # Change to your connection string and database name
+            CONNECTION_STRING = os.getenv('CONNECTION_STRING')
+            DATABASE_NAME = os.getenv('DATABASE_NAME')
+        self.con_string = CONNECTION_STRING
+        self.database_name = DATABASE_NAME
         self.meal_collection_name = meal_collection_name
         self.connected = False
         self.client = None
@@ -51,7 +59,7 @@ class MongoMealManager:
             print("There was an error while adding new meal: " + str(e))
             return 404
         
-    def update_food(self, meal_id=int, food_name=str, new_weight=float) -> str:
+    def change_food_weight(self, meal_id=int, food_name=str, new_weight=float) -> str:
         meal_collection = self.get_collection()
         try: 
             foods = meal_collection.find_one({"_id": meal_id})['foods']

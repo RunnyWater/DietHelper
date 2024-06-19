@@ -1,12 +1,21 @@
+from .foods import Foods
+from .calculator import * 
+
 class Meal:
-    def __init__(self):
-        self.foods = {}
+    def __init__(self, id, foods={}, db_type='json'):
+        self.id = id
+        self.foods = foods
+        if len(foods) > 0:
+            with Foods(db_type=db_type) as foods:
+                for food_name, weight in foods.values():
+                    self.update_macros(food_name, weight)
         self.sum_of_proteins = 0
         self.sum_of_fats = 0
         self.sum_of_carbs = 0
         self.sum_of_calories = 0
+    
 
-    def add_food(self, food, weight):
+    def add_food(self, food, weight=int):
         food_name = food.get_name()
         if food_name in list(self.foods.keys()):
             if input( "This food is already in meal, do you want to update its weight? (y/n)") == 'y':
@@ -73,13 +82,13 @@ class Meal:
     def set_weight(self, food_name, new_weight):
         self.foods[food_name][1] = new_weight
         return f"Weight of {food_name} updated to {new_weight}"
-        
 
-    def update_macros(self, food, weight, sign=1):
-        self.sum_of_proteins += food.get_proteins(weight*sign)
-        self.sum_of_fats +=     food.get_fats(weight*sign)
-        self.sum_of_carbs +=    food.get_carbs(weight*sign)
-        self.sum_of_calories += food.get_calories(weight*sign)
+    '''TODO: make it easier to update macros'''
+    def update_macros(self, weight, p=int, f=int, c=int, sign=1):
+        self.sum_of_proteins += get_proteins(weight*sign)
+        self.sum_of_fats +=     get_fats(weight*sign)
+        self.sum_of_carbs +=    get_carbs(weight*sign)
+        self.sum_of_calories += get_calories(weight*sign)
 
 
     def get_foods(self):
@@ -92,4 +101,3 @@ class Meal:
 
     def __str__(self) -> str:
         return f"Sum of proteins: {self.sum_of_proteins}g\nSum of fats: {self.sum_of_fats}g\nSum of carbs: {self.sum_of_carbs}g\nSum of calories: {self.sum_of_calories}kcal"
-    

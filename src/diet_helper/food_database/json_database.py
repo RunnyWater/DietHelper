@@ -15,6 +15,8 @@ class JsonFoodManager:
                 os.makedirs(os.path.dirname(json_file_path), exist_ok=True)
                 with open(json_file_path, 'w') as f:
                     return json_file_path
+            else: 
+                return exit('Please create json file')
 
 
     def get_foods(self):
