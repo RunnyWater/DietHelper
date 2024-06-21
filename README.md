@@ -1,0 +1,1 @@
+<p>A small application that helps user with their diet</p>
