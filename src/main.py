@@ -5,7 +5,7 @@ import os
 
 
 def main_function():
-    test = Foods(db_type='mongo')
+    test = Foods(db_type='json')
     print(test)    
 
     
