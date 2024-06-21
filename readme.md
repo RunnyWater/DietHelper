@@ -1,1 +1,1 @@
-A simple application that helps user with their diet
+<p>A small application that helps user with their diet</p>
