@@ -47,6 +47,16 @@ class Food:
         return f"variant {self.name} now has {self.variants}"
 
 
+    def get_info_for_json(self):
+        food_dict = {
+            "name": self.name,
+            "p": self.proteins,
+            "f": self.fats,
+            "c": self.carbs,
+            "variants": self.variants
+        }
+        return food_dict
+
     def get_name(self) -> str:
         return self.name
 
