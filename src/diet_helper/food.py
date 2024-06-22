@@ -8,7 +8,7 @@ class Food:
         self.carbs = int(c)
         self.variants = variants
 
-    def update_info(self, name=str, p=int, f=int, c=int, variants=None) -> str:
+    def update_info(self, name:str, p:int, f:int, c:int, variants:dict = None) -> str:
         if name is not None:
             self.name = name
         if p is not None:
@@ -22,14 +22,14 @@ class Food:
         return f'{self.name} updated'
     
 
-    def add_variant(self, new_variant):
+    def add_variant(self, new_variant:dict) -> str:
         if self.variants is None:
             self.variants = {}
         self.variants.update(new_variant)
         return f"{', '.join(new_variant.keys())} added to {self.name}"
 
 
-    def update_variant(self, variant_name, new_weight):
+    def update_variant(self, variant_name:str, new_weight:int) -> str:
         if self.variants is None or variant_name not in list(self.variants.keys()):
             print( f"{self.name} has no variant with name {variant_name}\nPlease choose out of the following: {', '.join(self.variants.keys())}")
             return '404'
@@ -37,7 +37,7 @@ class Food:
         return f"variant {self.name} now has {new_weight}"
     
 
-    def delete_variant(self, variant_name):
+    def delete_variant(self, variant_name:str):
         if self.variants is None:
             return f"food `{self.name}` has no variants"
         del self.variants[variant_name]

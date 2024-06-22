@@ -42,7 +42,7 @@ class MongoFoodManager:
             self.close_connection()
             return "There was an error while getting foods: " + str(e)
 
-    def get_food(self, name):
+    def get_food(self, name:str):
         food_collection = self.get_collection()
         try: 
             food = food_collection.find_one({"name":name.lower()})
@@ -51,7 +51,7 @@ class MongoFoodManager:
             self.close_connection()
             return "There was an error while getting food: " + str(e)
 
-    def insert_food(self, name=str, p=str != None, f=str != None, c=str != None, variants=None) -> str:
+    def insert_food(self, name:str, p:str, f:str, c:str, variants:dict=None) -> str:
         food_collection = self.get_collection()
         try: 
             food_collection.insert_one({"_id": food_collection.count_documents({}), "name":name.lower(), "p":p, "f":f, "c":c, "variants":variants})
@@ -61,7 +61,7 @@ class MongoFoodManager:
             return "There was an error while adding new food: " + str(e)
     
 
-    def add_variant(self, food_name=str, new_variant=dict) -> str:
+    def add_variant(self, food_name:str, new_variant:dict) -> str:
         if not self.variant_correctness_check(new_variant):
             return "Variant is not correct, please check it again"
         food_name = food_name.lower()
@@ -110,7 +110,7 @@ class MongoFoodManager:
             self.close_connection()
             return "There was an error while adding new variant to food: " + str(e)
 
-    def update_food(self, name=str, p=None, f=None, c=None) -> str:
+    def update_food(self, name:str, p:int = None, f:int = None, c:int = None) -> str:
         if p is None and f is None and c is None:
             return "Nothing to update"
         food_collection = self.get_collection()
@@ -132,7 +132,7 @@ class MongoFoodManager:
             return "There was an error while updating food: " + str(e)
 
 
-    def update_proteins(self,food_collection, name=str, p=str) -> str:
+    def update_proteins(self,food_collection, name:str, p:int) -> str:
         try:
             food_collection.update_one({"name":name}, {"$set":{"p":p}})
             return f"{name} updated, now it has {p} proteins"
@@ -140,7 +140,7 @@ class MongoFoodManager:
             return "There was an error while updating protein: " + str(e)
     
 
-    def update_fats(self,food_collection, name=str, f=str) -> str:
+    def update_fats(self,food_collection, name:str, f:int) -> str:
         try:
             food_collection.update_one({"name":name}, {"$set":{"f":f}})
             return f"{name} updated, now it has {f} fats"
@@ -148,7 +148,7 @@ class MongoFoodManager:
             return "There was an error while updating fats: " + str(e)
     
 
-    def update_carbs(self,food_collection, name=str, c=str) -> str:
+    def update_carbs(self,food_collection, name:str, c:str) -> str:
         try:
             food_collection.update_one({"name":name}, {"$set":{"c":c}})
             return f"{name} updated, now it has {c} carbs"
@@ -156,7 +156,7 @@ class MongoFoodManager:
             return "There was an error while updating carbs: " + str(e)
         
 
-    def update_variant(self, food_name=str, variant_name=str, new_value=str or int) -> str:
+    def update_variant(self, food_name:str, variant_name:str, new_value:int) -> str:
         new_value = new_value
         variant_name = variant_name.lower()
         food_collection = self.get_collection()
@@ -179,7 +179,7 @@ class MongoFoodManager:
                 return "There was an error while updating variant: " + str(e)   
 
 
-    def delete_variant(self, food_name=str, variant_name=None ) -> str:
+    def delete_variant(self, food_name:str, variant_name:str = None ) -> str:
         food_name = food_name.lower()
         food_collection = self.get_collection()
         try:
@@ -216,7 +216,7 @@ class MongoFoodManager:
             return "Exited with 'exit' command"
 
     
-    def delete_food(self, food_name=str) -> str:
+    def delete_food(self, food_name:str) -> str:
         food_name = food_name.lower()
         food_collection = self.get_collection()
         try:
@@ -245,7 +245,7 @@ class MongoFoodManager:
             print("There was an error while closing connection: " + str(e))
 
 
-    def variant_correctness_check (self, variants=dict) -> bool:
+    def variant_correctness_check (self, variants:dict) -> bool:
         for weight in variants.values():
             try :
                 int(weight)

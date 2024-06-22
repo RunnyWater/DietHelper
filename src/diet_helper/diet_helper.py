@@ -10,7 +10,7 @@ class FoodLister:
         best_food = {}
         macro_manager = MacroManager(self.foods)
         for food_name in self.foods.getNames():
-            info = macro_manager.get_info_with_weight(food_name=food_name, get_calories=True, get_protein=True)
+            info = macro_manager.get_info_with_grams(food_name=food_name, get_calories=True, get_protein=True)
             protein = int(info['protein'])
             calories = int(info['calories'])
             calories_per_protein_ration = round(calories/protein,1)

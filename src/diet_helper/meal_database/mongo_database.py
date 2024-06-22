@@ -46,7 +46,7 @@ class MongoMealManager:
             return 404
 
 
-    def insert_meal(self, foods=dict) -> str:
+    def insert_meal(self, foods:dict) -> str:
         meal_collection = self.get_collection()
         if meal_collection == 404:
             return 404
@@ -59,7 +59,7 @@ class MongoMealManager:
             print("There was an error while adding new meal: " + str(e))
             return 404
         
-    def change_food_weight(self, meal_id=int, food_name=str, new_weight=float) -> str:
+    def change_food_weight(self, meal_id:int, food_name:str, new_weight:float) -> str:
         meal_collection = self.get_collection()
         try: 
             foods = meal_collection.find_one({"_id": meal_id})['foods']
@@ -82,11 +82,3 @@ class MongoMealManager:
             print("Connection was successfully closed")
         except Exception as e:
             print("There was an error while closing connection: " + str(e))
-
-
-CONNECTION_STRING=  'mongodb+srv://siriusbrightestone:r53bEdWhlSz5d8hk@diethelper.dzyfoep.mongodb.net/'
-DATABASE_NAME=      'Main_Database'
-
-test = MongoMealManager(CONNECTION_STRING, DATABASE_NAME)
-test
-test.update_food(meal_id=0, food_name='apple', new_weight=0.5)

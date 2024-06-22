@@ -23,27 +23,27 @@ class JsonFoodManager:
         return self.load()
 
 
-    def get_food(self, name):
+    def get_food(self, name:str):
         name = name.lower()
         if name in self.data:
             return self.data[name]
         else:
             return "There is no such food in database"
  
-    def get_variants(self, name, stringify=False):
+    def get_variants(self, name:str, stringify:bool = False):
         variants = self.get_food(name)['variants']
         if stringify:
             return f'"{name}" variants:\n'+'\n'.join([f"{key} - {value}g" for key, value in variants.items()])
         else:
             return variants
 
-    def insert_food(self, name, p, f, c):
+    def insert_food(self, name:str, p:int, f:int, c:int):
         name = name.lower()
         self.data[name] = {'name': name, 'p': p, 'f': f, 'c': c, 'variants': None}
         self.save()
 
 
-    def delete_food(self, name):
+    def delete_food(self, name:str):
         name = name.lower()
         if name in self.data:
             del self.data[name]
@@ -52,7 +52,7 @@ class JsonFoodManager:
         else:
             return "There is no such food in database"
 
-    def delete_variant(self, food_name, variant_name=None):
+    def delete_variant(self, food_name:str, variant_name:bool=None):
         if variant_name is None:
             printed_version = ''
             variants = self.get_food(food_name)['variants']
@@ -72,7 +72,7 @@ class JsonFoodManager:
         else:
             return "There is no such food in database"
 
-    def add_variant(self, food_name=str, new_variant=dict) -> str:
+    def add_variant(self, food_name:str, new_variant:dict) -> str:
         if not self.variant_correctness_check(new_variant):
             return "Variant is not correct, please check it again"
         food_name = food_name.lower()
@@ -118,7 +118,7 @@ class JsonFoodManager:
             return "There was an error while adding new variant to food: " + str(e)
 
 
-    def update_variant(self, name=str, variant_name=None, new_weight=None) -> str:
+    def update_variant(self, name:str, variant_name:bool=None, new_weight:int=None) -> str:
         if variant_name is None or new_weight is None:
             variants = self.get_food(name)['variants']
             printed_version = ''
@@ -136,7 +136,7 @@ class JsonFoodManager:
             except Exception as e:
                 return "There was an error while updating variant: " + str(e)
 
-    def update_food(self, name=str, p=None, f=None, c=None) -> str:
+    def update_food(self, name:str, p:int=None, f:int=None, c:int=None) -> str:
         if p is None and f is None and c is None:
             return "You need to provide at least one parameter to update"
         try:
@@ -152,7 +152,7 @@ class JsonFoodManager:
             return "There was an error while updating food: " + str(e)
 
 
-    def update_proteins(self, name=str, p=int) -> str:
+    def update_proteins(self, name:str, p:int) -> str:
         if not self.check_type(p): raise 'The value must be an integer'
         try:
             self.data[name]['p'] = p
@@ -161,7 +161,7 @@ class JsonFoodManager:
             return "There was an error while updating protein: " + str(e)
     
 
-    def update_fats(self, name=str, f=int) -> str:
+    def update_fats(self, name:str, f:int) -> str:
         if not self.check_type(f): raise 'The value must be an integer'
         try:
             self.data[name]['f'] = f
@@ -170,7 +170,7 @@ class JsonFoodManager:
             return "There was an error while updating fats: " + str(e)
     
 
-    def update_carbs(self, name=str, c=int) -> str:
+    def update_carbs(self, name:str, c:int) -> str:
         if not self.check_type(c): raise 'The value must be an integer'
         try:
             self.data[name]['c'] = c
@@ -178,7 +178,7 @@ class JsonFoodManager:
         except Exception as e:
             return "There was an error while updating carbs: " + str(e)
 
-    def check_type(self, value=None) -> bool:
+    def check_type(self, value:int=None) -> bool:
         if type(value) == int:
             return True
         else:
@@ -202,7 +202,7 @@ class JsonFoodManager:
             json.dump(self.data, f, indent=4)
 
 
-    def variant_correctness_check (self, variants=dict) -> bool:
+    def variant_correctness_check (self, variants:dict) -> bool:
         if type(variants) == dict:
             for weight in variants.values():
                 try :

@@ -1,14 +1,14 @@
-def get_calories(weight=1, p=int, f=int, c=int) -> int:
+def get_calories(weight:float, p:float, f:float, c:float) -> float:
         return round((p * 4 + f * 9 + c * 4)*weight, 2)
 
 
-def get_proteins(weight=1, p=int) -> int:
+def get_proteins(weight:float, p:float) -> float:
     return round(p*weight, 2)
 
 
-def get_fats(weight=1,f=int) -> int:
+def get_fats(weight:float,f:float) -> float:
    return round(f*weight, 2)
 
 
-def get_carbs(weight=1, c=int) -> int:
+def get_carbs(weight:float, c:float) -> float:
     return round(c*weight, 2)

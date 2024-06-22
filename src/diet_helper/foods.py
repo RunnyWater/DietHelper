@@ -31,7 +31,7 @@ class Foods:
         return self.__manager.get_foods()
 
 
-    def add_food(self, name, p, f, c, variants=None):
+    def add_food(self, name:str, p:int, f:int, c:int, variants=None):
         name = name.lower()
         if name in self.get_names():
             return f"{name} already exists in database"
@@ -41,27 +41,27 @@ class Foods:
             self.add_variant(name, variants)
         return f"{name} added to database with p: {p}, f: {f}, c: {c}"
 
-    def add_variant(self, name, new_variant):
+    def add_variant(self, name:str, new_variant:dict):
         name = name.lower()
         if self.__manager.add_variant(name, new_variant) == "Variant is not correct, please check it again": 
             return "Variant is not correct, please check it again"
         self.foods[name].add_variant(new_variant)
         return f"{name} updated"
 
-    def update_variant(self, name, variant_name, new_value):
+    def update_variant(self, name:str, variant_name:str, new_value:int):
         name = name.lower()
         if self.foods[name].update_variant(variant_name, new_value) == '404': 
             return 'Error code: 404'
         self.__manager.update_variant(name, variant_name, new_value)
         return f"{name}, {variant_name} updated to {new_value}"
 
-    def delete_variant(self, name, variant_name):
+    def delete_variant(self, name:str, variant_name:str):
         name = name.lower()
         self.foods[name].delete_variant(variant_name)
         self.__manager.delete_variant(name, variant_name)
         return f"{name}, variant {variant_name} deleted"
 
-    def update_food(self, name, p=None, f=None, c=None, variants=None):
+    def update_food(self, name:str, p:int=None, f:int=None, c:int=None, variants:dict=None):
         name = name.lower()
         self.foods[name].updateInfo(p, f, c, variants)
         self.__manager.update_food(name, p, f, c, variants)
