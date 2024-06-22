@@ -33,7 +33,7 @@ class Meal:
         food_name
         if food_name in list(self.foods.keys()):
             if input( "This food is already in meal, do you want to update its weight? (y/n)") == 'y':
-               return self.update_weight(food_name, weight)
+               return self.change_food_weight(food_name, weight)
             elif input("Do you want to add another food? (y/n)") == 'n':
                 return f"{food_name} already in the meal"
         self.foods[food_name] = weight
@@ -43,7 +43,7 @@ class Meal:
         return f"{food_name} added to meal with weight {weight}"
 
     
-    def update_weight(self, food_name:str, new_weight:int):
+    def change_food_weight(self, food_name:str, new_weight:int):
         old_weight = self.get_weight(food_name)
         difference = round(new_weight - old_weight, 2)
         food = self.__manager.get_food(food_name)

@@ -1,2 +1,2 @@
 from .mongo_database import MongoMealManager
-# from .json_database import JsonMealManager # TODO: Add JsonMealManager
+from .json_database import JsonMealManager 

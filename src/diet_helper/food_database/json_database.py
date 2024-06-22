@@ -13,8 +13,7 @@ class JsonFoodManager:
         else:
             if input(f"{json_file_path} not found, do you want to create it? (y/n)") == 'y': 
                 os.makedirs(os.path.dirname(json_file_path), exist_ok=True)
-                with open(json_file_path, 'w') as f:
-                    return json_file_path
+                return json_file_path
             else: 
                 return exit('Please create json file')
 

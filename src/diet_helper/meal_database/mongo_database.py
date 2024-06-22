@@ -45,13 +45,31 @@ class MongoMealManager:
             print( "There was an error while getting meals: " + str(e))
             return 404
 
+    def add_food(self, id:int, new_food:dict) -> str:
+        meal_collection = self.get_collection()
+        if meal_collection == 404:
+            return 404
+        try:
+            foods = meal_collection.find_one({"_id": id})["foods"]
+            foods.update(new_food)
+            meal_collection.update_one({"_id": id}, {"$set":{"foods":foods}})
+            self.close_connection()
+        except Exception as e:
+            self.close_connection()
+            print("There was an error while adding new food: " + str(e))
+            return 404
 
     def insert_meal(self, foods:dict) -> str:
         meal_collection = self.get_collection()
         if meal_collection == 404:
             return 404
         try:
-            meal_collection.insert_one({"_id": meal_collection.count_documents({}), "foods":foods})
+            last_document = meal_collection.find().sort("_id", -1).limit(1).next()
+            if last_document:
+                id = last_document['_id']
+            else:
+                id = 0
+            meal_collection.insert_one({"_id": id, "foods":foods})
             self.close_connection()
             return 200
         except Exception as e:
@@ -74,6 +92,47 @@ class MongoMealManager:
             print( "There was an error while updating food weight inside a meal: " + str(e))
             return 404
 
+    def update_food_name(self, id:int, old_name:str, new_name:str):
+        meal_collection = self.get_collection()
+        if meal_collection == 404:
+            return 404
+        try:
+            foods = meal_collection.find_one({"_id": id})["foods"]
+            foods[new_name] = foods.pop(old_name)
+            meal_collection.update_one({"_id": id}, {"$set":{"foods":foods}})
+            self.close_connection()
+        except Exception as e:
+            self.close_connection()
+            print("There was an error while adding new food: " + str(e))
+            return 404
+
+    def delete_meal(self, id:int) -> str:
+        meal_collection = self.get_collection()
+        if meal_collection == 404:
+            return 404
+        try:
+            meal_collection.delete_one({"_id": id})
+            self.close_connection()
+            return 200
+        except Exception as e:
+            self.close_connection()
+            print("There was an error while deleting meal: " + str(e))
+            return 404
+
+    def delete_food(self, id:int, food_name:str) -> str:
+        meal_collection = self.get_collection()
+        if meal_collection == 404:
+            return 404
+        try:
+            foods = meal_collection.find_one({"_id": id})["foods"]
+            foods.pop(food_name)
+            meal_collection.update_one({"_id": id}, {"$set":{"foods":foods}})
+            self.close_connection()
+            return 200
+        except Exception as e:
+            self.close_connection()
+            print("There was an error while deleting food: " + str(e))
+            return 404
 
     def close_connection(self) -> None:
         try:
