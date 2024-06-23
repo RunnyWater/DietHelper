@@ -1,13 +1,13 @@
-from meal import Meal
-from meal_database import MongoMealManager, JsonMealManager
+from .meal import Meal
+from .meal_database import MongoMealManager, JsonMealManager
 
 class Meals:
     def __init__(self, db_type='json', json_file_path='json/meals.json'):
         self.db_type = db_type
-        self.json_file_path = json_file_path
         if db_type == 'json':
             self.__manager = JsonMealManager(json_file_path=json_file_path)
             self.meals = self.get_meals_json()
+            self.json_file_path = json_file_path
         elif db_type == 'mongo':
             self.__manager = MongoMealManager()
             self.meals = self.get_meals_mongo()
@@ -42,8 +42,11 @@ class Meals:
         if len(self.meals) == 0:
             id = 0
         else:
-            id = self.meals[-1].id + 1
-        self.meals.update({id:Meal(id, foods, db_type=self.db_type, json_file_path=self.json_file_path)})
+            id = max(self.meals.keys()) + 1
+        if self.db_type == 'json':
+            self.meals.update({id:Meal(id, foods, json_file_path=self.json_file_path)})
+        elif self.db_type == 'mongo':
+            self.meals.update({id:Meal(id, foods)})
         self.__manager.insert_meal(foods)
         return f"Meal added"
     
@@ -64,3 +67,7 @@ class Meals:
         self.meals[id].delete_food(food_name)
         self.__manager.delete_food(id, food_name)
         return f"Food {food_name} deleted from meal {id}"
+    
+    def __repr__(self) -> str:
+        printed_version = ', '.join([str(meal) for meal in self.meals.values()])
+        return printed_version

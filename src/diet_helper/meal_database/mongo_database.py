@@ -66,7 +66,7 @@ class MongoMealManager:
         try:
             last_document = meal_collection.find().sort("_id", -1).limit(1).next()
             if last_document:
-                id = last_document['_id']
+                id = last_document['_id']+1
             else:
                 id = 0
             meal_collection.insert_one({"_id": id, "foods":foods})

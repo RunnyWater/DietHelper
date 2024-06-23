@@ -36,7 +36,10 @@ class JsonMealManager:
         self.save()
         
     def insert_meal(self, foods:dict):
-        id = len(self.data)
+        if len(self.data) == 0:
+            id = 0
+        else:
+            id = max(self.data.keys()) + 1
         self.data[id] = foods
 
     def update_food_name(self, id:int, old_name:str, new_name:str):
