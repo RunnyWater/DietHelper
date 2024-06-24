@@ -6,11 +6,12 @@ class MongoFoodManager:
     def __init__(self, con_string=None, database_name=None, food_collection_name='food'):
         if con_string is None or database_name is None:
             load_dotenv()
-            # Change to your connection string and database name
-            CONNECTION_STRING = os.getenv('CONNECTION_STRING')
-            DATABASE_NAME = os.getenv('DATABASE_NAME')
-        self.con_string = CONNECTION_STRING
-        self.database_name = DATABASE_NAME
+             
+            self.con_string = os.getenv('CONNECTION_STRING')
+            self.database_name = os.getenv('DATABASE_NAME')
+        else:
+            self.con_string = con_string
+            self.database_name = database_name
         self.food_collection_name = food_collection_name
         self.connected = False
         self.client = None
