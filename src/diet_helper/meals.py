@@ -2,7 +2,7 @@ from .meal import Meal
 from .meal_database import MongoMealManager, JsonMealManager
 
 class Meals:
-    def __init__(self, db_type='json', json_file_path='json/meals.json'):
+    def __init__(self, db_type:str='json', json_file_path:str='json/meals.json'):
         self.db_type = db_type
         if db_type == 'json':
             self.__manager = JsonMealManager(json_file_path=json_file_path)
@@ -69,5 +69,4 @@ class Meals:
         return f"Food {food_name} deleted from meal {id}"
     
     def __repr__(self) -> str:
-        printed_version = ', '.join([str(meal) for meal in self.meals.values()])
-        return printed_version
+        return ', '.join([str(meal) for meal in self.meals.values()])
