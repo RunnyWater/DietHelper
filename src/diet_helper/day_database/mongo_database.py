@@ -1,5 +1,5 @@
 import pymongo 
-import datetime
+from datetime import datetime
 from dotenv import load_dotenv
 import os
 
@@ -55,22 +55,84 @@ class MongoDayManager:
             return "There was an error while getting days: " + str(e)
 
 
-    def get_day(self, date:str):
-        if not self.is_date_in_format(date):
-            print("Wrong date format")
-            return None
+    def get_day(self, day:datetime):
+        date = self.get_start_of_the_day(day)
         day_collection = self.get_collection()
         try: 
-            day = day_collection.find_one({"name":da.lower()})
+            day = day_collection.find_one({"_id":date})
             return day
         except Exception as e:
             self.close_connection()
             return "There was an error while getting food: " + str(e)
 
+    
+    def get_todays_date(self):
+        return datetime.combine(datetime.today(), datetime.min.time())
+    
 
-    def is_date_in_format(self, date:str):
-        try :
-            datetime.strptime(date, '%Y-%m-%d')
-            return True
-        except ValueError:
-            return False
+    def add_day(self, day:datetime, meal_ids:list):
+        date = self.get_start_of_the_day(day)
+        day_collection = self.get_collection()
+        if day_collection.count_documents({"_id": date}) > 0:
+            print("Day already exists")
+            return None
+        try: 
+            day_collection.insert_one({'_id':date, 'meals':meal_ids})
+            print("Day added successfully")
+            return None
+        except Exception as e:
+            self.close_connection()
+            print("There was an error while adding day: " + str(e))
+            return 404
+        
+
+    def add_meal(self, day:datetime, meal_id:int):
+        date = self.get_start_of_the_day(day)
+        day_collection = self.get_collection()
+        try: 
+            day_collection.update_one({"_id": date}, {"$push": {"meals": meal_id}})
+            print("Meal added successfully to day")
+            return None
+        except Exception as e:
+            self.close_connection()
+            print( "There was an error while adding meal: " + str(e))
+            return 404
+        
+
+    def delete_meal(self, day:datetime, meal_id:int):
+        date = self.get_start_of_the_day(day)
+        day_collection = self.get_collection()
+        try: 
+            day_collection.update_one({
+                    "_id": date
+                }, 
+                {
+                    "$pull": {"meals": meal_id}
+                })
+            print("Meal deleted successfully from day")
+            return None
+        except Exception as e:
+            self.close_connection()
+            print( "There was an error while deleting meal: " + str(e))
+            return 404
+        
+    def change_meal(self, day:datetime, old_meal_id:int, new_meal_id:int):
+        date = self.get_start_of_the_day(day)
+        day_collection = self.get_collection()
+        try: 
+            day_collection.update_one({
+                    "_id": date, "meals": old_meal_id
+                }, 
+                {
+                    "$set": {"meals.$": new_meal_id}
+                })
+            print("Meal changed successfully")
+            return None
+        except Exception as e:
+            self.close_connection()
+            print( "There was an error while changing meal: " + str(e))
+            return 404
+        
+    def get_start_of_the_day(self, day:datetime):
+        return datetime.combine(day, datetime.min.time())
+    
