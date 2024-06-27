@@ -60,7 +60,7 @@ class MongoMealManager:
             print("There was an error while adding new food: " + str(e))
             return 404
 
-    def insert_meal(self, foods:dict) -> str:
+    def insert_meal(self, foods:dict = {}) -> str:
         meal_collection = self.get_collection()
         if meal_collection == 404:
             return 404

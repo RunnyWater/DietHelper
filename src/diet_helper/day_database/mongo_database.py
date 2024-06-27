@@ -1,5 +1,5 @@
 import pymongo 
-from datetime import datetime
+from datetime import datetime, timedelta
 from dotenv import load_dotenv
 import os
 
@@ -65,7 +65,26 @@ class MongoDayManager:
             self.close_connection()
             return "There was an error while getting food: " + str(e)
 
-    
+    def get_days_by_month(self, year:int = datetime.now().year, month:int = datetime.now().month):
+        start_date = datetime(year, month, 1)
+        end_date = datetime(year, month + 1, 1) - timedelta(days=1)
+        days = self.get_days_between_two_dates(start_date, end_date)
+        return days
+    def get_days_between_two_dates(self, start_date:datetime, end_date:datetime):  
+        day_collection = self.get_collection()
+        try: 
+            days = day_collection.find({
+                "_id": {
+                    "$gte": start_date,
+                    "$lt": end_date
+                }
+            })
+            return days
+        except Exception as e:
+            self.close_connection()
+            print( "There was an error while getting days: " + str(e))
+            return None
+
     def get_todays_date(self):
         return datetime.combine(datetime.today(), datetime.min.time())
     

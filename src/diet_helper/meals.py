@@ -37,6 +37,10 @@ class Meals:
     def get_meal_by_id(self, id:int):
         return self.meals[id]
     
+    def insert_food(self, id:int, food_name:str, weight:int):
+        self.meals[id].insert_food(food_name, weight)
+        self.__manager.insert_food(id, food_name, weight)
+        return f"Food {food_name} added to meal {id}"
 
     def insert_meal(self, foods:dict):
         if len(self.meals) == 0:
@@ -50,6 +54,20 @@ class Meals:
         self.__manager.insert_meal(foods)
         return f"Meal added"
     
+    def create_empty_meal(self, return_id = False):
+        if len(self.meals) == 0:
+            id = 0
+        else:
+            id = max(self.meals.keys()) + 1
+        if self.db_type == 'json':
+            self.meals.update({id:Meal(id, foods={}, json_file_path=self.json_file_path)})
+        elif self.db_type == 'mongo':
+            self.meals.update({id:Meal(id, foods={})})
+        self.__manager.insert_meal({})
+        print("Meal added")
+        if return_id:
+            return id
+        return
     
     def change_food_weight(self, id:int, food_name:str, new_weight:int):
         self.meals[id].change_food_weight(food_name, new_weight)
