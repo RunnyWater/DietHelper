@@ -4,10 +4,11 @@ from .meals import Meals
 
 class Days:
     def __init__(self, con_string=None, database_name=None, day_collection_name='day', db_type='json', json_file_path='json/days.json'):
-        self.meals = Meals(db_type=self.db_type, json_file_path=self.json_file_path)
+        self.meals = Meals(db_type=db_type, json_file_path=json_file_path)
         if db_type == 'mongo':
             self.__manager = MongoDayManager(con_string, database_name, day_collection_name)
             self.days = self.get_days_mongo()
+            print(self.days)
         else:
             self.__manager = None
             # self.days = self.get_days_json()
