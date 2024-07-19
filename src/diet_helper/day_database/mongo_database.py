@@ -221,7 +221,7 @@ class MongoDayManager:
                     meal = meals[meal_number]
                     meal.pop(food)
                     day_collection.update_one({"_id": date}, {"$set": {"meals": meals}})
-            if print_stages: print("Food added successfully to meal")
+            if print_stages: print("Food deleted successfully from the meal")
             return None
         except Exception as e:
             self.close_connection()

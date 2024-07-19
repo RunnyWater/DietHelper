@@ -8,18 +8,21 @@ class JsonFoodManager:
 
 
     def get_database(self, json_file_path='json/foods.json'):
-        if os.path.exists(json_file_path):
-            return json_file_path
-        else:
-            if input(f"{json_file_path} not found, do you want to create it? (y/n)") == 'y': 
-                os.makedirs(os.path.dirname(json_file_path), exist_ok=True)
+        try:
+            os.makedirs(os.path.dirname(json_file_path), exist_ok=True)
+            with open(json_file_path, 'r') as f:
                 return json_file_path
-            else: 
-                return exit('Please create json file')
-
+        except FileExistsError:
+            try:
+                with open(json_file_path, 'r') as f:
+                    if f.read() != '':
+                        return json_file_path
+            except Exception as e:
+                print(f"An unexpected error occurred: {e}")
+            return json_file_path
 
     def get_foods(self):
-        return self.load()
+        return self.data
 
 
     def get_food(self, name:str):

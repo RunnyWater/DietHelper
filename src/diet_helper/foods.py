@@ -28,7 +28,17 @@ class Foods:
 
 
     def get_foods_json(self):
-        return self.__manager.get_foods()
+        try: 
+
+            food_list =  self.__manager.get_foods()
+            foods = {}
+            for food_name in food_list:
+                food = food_list[food_name]
+                foods[food_name] = Food(name=food_name, p=food['p'], f=food['f'], c=food['c'], variants=food['variants'])
+            return foods
+        except Exception as e:
+            print( "There was an error while getting foods: " + str(e))
+            return None
 
 
     def add_food(self, name:str, p:int, f:int, c:int, variants=None, print_stages: bool = False):

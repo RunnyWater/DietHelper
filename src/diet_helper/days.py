@@ -1,15 +1,17 @@
-from .day_database import MongoDayManager
+from .day_database import MongoDayManager, JsonDayManager
 from .foods import Foods
 
 from datetime import datetime
 
 
-def get_normalized_date(date:datetime):
+def get_normalized_date(date:datetime | str):
+    if isinstance(date, str):
+        date = datetime.strptime(date[:10], '%Y-%m-%d')
     return datetime.combine(date, datetime.min.time())
 
 def from_string_to_date(date:str | datetime):
     if isinstance(date, str):
-        return datetime.strptime(date, '%Y-%m-%d %H:%M:%S.%f')
+        return datetime.strptime(date[:10], '%Y-%m-%d')
     else:
         return get_normalized_date(date)
 
@@ -19,13 +21,13 @@ def get_todays_date():
 
 class Days:
     def __init__(self, con_string=None, database_name=None, day_collection_name='day', db_type='json', json_file_path='json/days.json'):
-        self.foods = Foods(db_type=db_type, json_file_path=json_file_path)
+        self.foods = Foods(db_type=db_type)
         if db_type == 'mongo':
             self.__manager = MongoDayManager(con_string, database_name, day_collection_name)
             self.days = self.get_days_mongo()
         else:
-            self.__manager = None
-            # self.days = self.get_days_json()
+            self.__manager = JsonDayManager()
+            self.days = self.get_days_json()
         if self.days is None:
             exit('There was an error while gettting days from database')
 
@@ -38,8 +40,12 @@ class Days:
         return days 
 
     def get_days_json(self):
-        # TODO: implement json
-        return None
+        json_data = self.__manager.get_days()
+        days = {}
+        for day in json_data: # getting days from json
+            days[day] = Day(meals=json_data[day]['meals'], date=day, foods=self.foods) # adding day to days dict
+        return days 
+
 
     def add_meal(self, date:str | datetime, meals:dict):
         if date not in self.days:
