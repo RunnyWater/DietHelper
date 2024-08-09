@@ -20,7 +20,7 @@ def get_todays_date():
 
 
 class Days:
-    def __init__(self, con_string=None, database_name=None, day_collection_name='day', db_type='json', json_file_path='json/days.json'):
+    def __init__(self, con_string=None, database_name=None, day_collection_name='day', db_type='json'):
         self.foods = Foods(db_type=db_type)
         if db_type == 'mongo':
             self.__manager = MongoDayManager(con_string, database_name, day_collection_name)
