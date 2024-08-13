@@ -7,16 +7,16 @@ from datetime import datetime
 def get_normalized_date(date:datetime | str):
     if isinstance(date, str):
         date = datetime.strptime(date[:10], '%Y-%m-%d')
-    return datetime.combine(date, datetime.min.time())
+    return str(datetime.combine(date, datetime.min.time()))
 
 def from_string_to_date(date:str | datetime):
     if isinstance(date, str):
-        return datetime.strptime(date[:10], '%Y-%m-%d')
+        return str(datetime.strptime(date[:10], '%Y-%m-%d'))
     else:
         return get_normalized_date(date)
 
 def get_todays_date():
-    return datetime.combine(datetime.today(), datetime.min.time())
+    return str(datetime.combine(datetime.today(), datetime.min.time()))
 
 
 class Days:
@@ -79,7 +79,9 @@ class Days:
         if date not in list(self.days.keys()):
             print("Day does not exist")
             return 
-        return self.days[date].get_all_meals_macros()
+        
+        macros = self.days[date].get_all_meals_macros()
+        return macros
 
     def add_food_to_day(self, date:str | datetime, meal_number:int, food_name:str, weight:float):
         date = from_string_to_date(date)
@@ -114,15 +116,23 @@ class Days:
             return 
         return self.days[date].meals
 
+
+class RoundedDict(dict):
+    def __setitem__(self, key, value):
+        if isinstance(value, (int, float)):
+            super().__setitem__(key, round(value, 2))
+        else:
+            super().__setitem__(key, value)
+
 class Day:
     def __init__(self,meals:list[dict], date:datetime, foods: Foods):
         self.foods = foods
         self.meals = meals
         self.date = get_normalized_date(date)
-        self.sum_of_fats = {'total':0}
-        self.sum_of_carbs = {'total':0}
-        self.sum_of_proteins = {'total':0}
-        self.sum_of_calories = {'total':0}
+        self.sum_of_fats = RoundedDict({'total': 0})
+        self.sum_of_carbs = RoundedDict({'total': 0})
+        self.sum_of_proteins = RoundedDict({'total': 0})
+        self.sum_of_calories = RoundedDict({'total': 0})
         self.calculate_macros()
 
     def calculate_macros(self):
@@ -187,7 +197,7 @@ class Day:
     def get_all_meals_macros(self):
         macros = {}
         for i in range(0, len(self.meals)):
-            macros.update({i:self.get_meals_macros(i)})
+            macros.update({i+1:self.get_meals_macros(i)})
         return macros
 
 

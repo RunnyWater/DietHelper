@@ -7,7 +7,6 @@ import inspect
 class TextMenu:
     def handle_user_input(self, options:dict):
         while True:
-            print(self.options)
             print("\nPlease select an option:")
             for key, value in self.options.items():
                 print(f"{key}: {value}")
@@ -35,7 +34,6 @@ class TextMenu:
                     # Ask user to provide arguments
                     args = []
                     kwargs = {}
-                    print(params.items())
                     for name, param in params.items():
                         if param.default == inspect.Parameter.empty:
                             value = input(f"Enter the value for '{name}': ")
@@ -52,6 +50,7 @@ class TextMenu:
                     result = func()
                     
                 print("Function executed successfully. Result:", result)
+                
                 
             except KeyError:
                 print("Invalid option. Please choose a valid number.")
@@ -73,6 +72,8 @@ class DaysMenu(TextMenu):
             2: 'add_day',
             3: 'get_food',
             4: 'get_total_macros_by_date',
+            5: 'get_meal_macros_by_date',
+            6: 'get_all_meals_macros_by_date',
             'q': 'return'
         }
         self.days = Days()
