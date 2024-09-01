@@ -1,8 +1,9 @@
-from .macro_helper import MacroManager
-from .diet_helper import FoodLister
+# from .macro_helper import MacroManager
+# from .diet_helper import FoodLister
 from .foods import Foods
 from .days import Days
 import inspect
+import os
 
 class TextMenu:
     def handle_user_input(self, options:dict) -> None:
@@ -61,6 +62,38 @@ class TextMenu:
             except Exception as e:
                 print(f"An error occurred: {e}")
 
+class DatabaseMenu(TextMenu):
+    def __init__(self, ):
+        self.database_type = self.get_database_type()
+
+        self.options:dict = {
+            1: 'Change to Local',
+            2: 'Change to MongoDB',
+            'q': 'exit'
+        }
+        self.handle_user_input()
+
+    # TODO: add possibility to use config 
+    def get_database_type(self) -> None:
+        pass
+    
+    # TODO: finish the function
+    def handle_user_input(self) -> None:
+        while True:
+            print("\nPlease select an option:")
+            for key, value in self.options.items():
+                print(f"{key}: {value}")
+            choice:str = input("Enter the number of your choice: ")
+
+            if choice.lower() == 'q':
+                print("Exiting...")
+                break
+
+            pass
+
+
+
+
 class DaysMenu(TextMenu):
 
     def __init__(self):
@@ -103,10 +136,7 @@ class MainMenu(TextMenu):
         self.days_menu = DaysMenu()
         self.foods_menu = FoodsMenu()
         self.handle_user_input()
-        all_members = inspect.getmembers(self)
 
-        # Filter to include only functions
-        functions = [member[0] for member in all_members if inspect.isfunction(member[1])]
 
     # override of the parent function due to options linking to the classes itself and that requires another handling method
     def handle_user_input(self) -> None:
