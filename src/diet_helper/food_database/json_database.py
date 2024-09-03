@@ -3,23 +3,29 @@ import json
 
 class JsonFoodManager:
     def __init__(self, json_file_path='json/foods.json'):
-        self.json_path = self.get_database(json_file_path)
+        self.initialize_json_file(json_file_path)
+        self.json_path = json_file_path
         self.data = self.load()
 
 
-    def get_database(self, json_file_path='json/foods.json'):
+    def initialize_json_file(self, json_file_path):
+        dirs = json_file_path[:json_file_path.rfind('/')]
         try:
-            os.makedirs(os.path.dirname(json_file_path), exist_ok=True)
-            with open(json_file_path, 'r') as f:
-                return json_file_path
+            os.makedirs(dirs)
         except FileExistsError:
+                pass
+        except Exception as e:
+            print("There was an error while creating folder json" + e)
+
+        if not os.path.exists(json_file_path):
             try:
-                with open(json_file_path, 'r') as f:
-                    if f.read() != '':
-                        return json_file_path
+                with open(json_file_path, 'w') as f:
+                    f.write('{}')
+            except FileExistsError:
+                pass
             except Exception as e:
-                print(f"An unexpected error occurred: {e}")
-            return json_file_path
+                print("There was an error while creating json file" + e)
+
 
     def get_foods(self):
         return self.data

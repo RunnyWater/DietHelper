@@ -4,8 +4,17 @@ from .foods import Foods
 from .days import Days
 import inspect
 import os
+from config_manager import Config
+
+_config = Config()
 
 class TextMenu:
+    def __init__(self, options:dict) -> None:
+        self.options = options
+
+    def run(self) -> None:
+        self.handle_user_input(self.options)
+
     def handle_user_input(self, options:dict) -> None:
         while True:
             print("\nPlease select an option:")
@@ -48,10 +57,7 @@ class TextMenu:
                     result = func(*args, **kwargs)
                 else:
                     # Call the function without arguments
-                    result = func()
-                    
-                print("Function executed successfully. Result:", result)
-                
+                    result = func()                
                 
             except KeyError:
                 print("Invalid option. Please choose a valid number.")
@@ -62,84 +68,18 @@ class TextMenu:
             except Exception as e:
                 print(f"An error occurred: {e}")
 
-class DatabaseMenu(TextMenu):
-    def __init__(self, ):
-        self.database_type = self.get_database_type()
-
-        self.options:dict = {
-            1: 'Change to Local',
-            2: 'Change to MongoDB',
-            'q': 'exit'
-        }
-        self.handle_user_input()
-
-    # TODO: add possibility to use config 
-    def get_database_type(self) -> None:
-        pass
-    
-    # TODO: finish the function
-    def handle_user_input(self) -> None:
-        while True:
-            print("\nPlease select an option:")
-            for key, value in self.options.items():
-                print(f"{key}: {value}")
-            choice:str = input("Enter the number of your choice: ")
-
-            if choice.lower() == 'q':
-                print("Exiting...")
-                break
-
-            pass
-
-
-
-
-class DaysMenu(TextMenu):
-
-    def __init__(self):
-        
-        # TODO: add possibility to use full options 
-        # self.options = {1 :'add_meal', 2 :'add_day', 3 :'get_total_macros_by_date', 4 :'get_meal_macros_by_date', 5 :'get_all_meals_macros_by_date', 6 :'exit'}
-        self.options:dict = {
-            1: 'add_meal',
-            2: 'add_day',
-            3: 'get_food',
-            4: 'get_total_macros_by_date',
-            5: 'get_meal_macros_by_date',
-            6: 'get_all_meals_macros_by_date',
-            'q': 'return'
-        }
-        self.database:Days = Days()
-        self.handle_user_input(self.options)
-
-class FoodsMenu(TextMenu):
-
-    def __init__(self):
-        
-        # TODO: add possibility to use full options 
-        # self.options = {1 :'add_food', 2 :'add_variant', 3 :'delete_food', 4 :'delete_variant', 5 :'get_foods', 'q' :'exit'}
-        self.options:dict = {
-            1 :'add_food', 
-            2 :'add_variant', 
-            3 :'delete_food',
-            4 :'delete_variant', 
-            5 :'get_foods',
-            6 :'get_food',
-            'q' :'return'}
-        self.database:Foods= Foods()
-
-        self.handle_user_input(self.options)
 
 class MainMenu(TextMenu):
     def __init__(self) -> None:
         self.options = {1: 'days', 2: 'foods', 3: 'change_database_type', 'q': 'exit'}
         self.days_menu = DaysMenu()
         self.foods_menu = FoodsMenu()
-        self.handle_user_input()
+        self.database_menu = DatabaseMenu()
+        self.run()
 
 
     # override of the parent function due to options linking to the classes itself and that requires another handling method
-    def handle_user_input(self) -> None:
+    def handle_user_input(self, *args, **kwargs) -> None:
         while True:
             print("\nPlease select an option:")
             for key, value in self.options.items():
@@ -196,10 +136,85 @@ class MainMenu(TextMenu):
 
 
     def change_database_type(self):
-        pass
+        self.database_menu.run()
 
     def days(self):
-        pass
+        self.days_menu.run()
 
     def foods(self):
-        pass
+        self.foods_menu.run()
+
+class DatabaseMenu(TextMenu):
+    def __init__(self):
+        self.array_options = ['Local', 'MongoDB']
+        self.options:dict = {}
+        self.initialize_option_dictionary()
+        self.database_type = self.get_database_type()
+        self.options[int(self.database_type)] += ' (Selected)'
+
+    def initialize_option_dictionary(self):
+        self.options = {}
+        for key, value in enumerate(self.array_options):
+            self.options[key+1] = value
+        self.options['q'] = 'return'
+
+
+    def get_database_type(self) -> None:
+        return _config.get('database', 'database_type')
+    
+    # TODO: finish the function
+    def handle_user_input(self, *args, **kwargs) -> None:
+        while True:
+            print("\nPlease select an option:")
+            for key, value in self.options.items():
+                print(f"{key}: {value}")
+            choice:str = input("Enter the number of your choice: ")
+
+            if choice.lower() == 'q':
+                print("Exiting...")
+                break
+
+            elif choice.isdigit() and int(choice) in self.options:
+                self.change_database_type(int(choice))
+
+    def change_database_type(self, option):
+        _config.set_database_option('database_type', str(option))
+        self.initialize_option_dictionary()
+        self.options[option] += ' (Selected)'
+
+            
+
+
+class DaysMenu(TextMenu):
+
+    def __init__(self):
+        
+        # TODO: add possibility to use full options 
+        # self.options = {1 :'add_meal', 2 :'add_day', 3 :'get_total_macros_by_date', 4 :'get_meal_macros_by_date', 5 :'get_all_meals_macros_by_date', 6 :'exit'}
+        self.options:dict = {
+            1: 'add_meal',
+            2: 'add_day',
+            3: 'get_food',
+            4: 'get_total_macros_by_date',
+            5: 'get_meal_macros_by_date',
+            6: 'get_all_meals_macros_by_date',
+            'q': 'return'
+        }
+        self.database:Days = Days()
+
+
+class FoodsMenu(TextMenu):
+
+    def __init__(self):
+        
+        # TODO: add possibility to use full options 
+        # self.options = {1 :'add_food', 2 :'add_variant', 3 :'delete_food', 4 :'delete_variant', 5 :'get_foods', 'q' :'exit'}
+        self.options:dict = {
+            1 :'add_food', 
+            2 :'add_variant', 
+            3 :'delete_food',
+            4 :'delete_variant', 
+            5 :'get_foods',
+            6 :'get_food',
+            'q' :'return'}
+        self.database:Foods= Foods()
