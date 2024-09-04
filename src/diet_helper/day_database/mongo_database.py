@@ -1,18 +1,11 @@
 import pymongo 
 from datetime import datetime, timedelta
-from dotenv import load_dotenv
-import os
+
 
 class MongoDayManager:
-    def __init__(self, con_string=None, database_name=None, day_collection_name='day'):
-        if con_string is None or database_name is None:
-            load_dotenv()
-            
-            self.con_string = os.getenv('CONNECTION_STRING')
-            self.database_name = os.getenv('DATABASE_NAME')
-        else:
-            self.con_string = con_string
-            self.database_name = database_name
+    def __init__(self, con_string, database_name, day_collection_name='days'):
+        self.con_string = con_string
+        self.database_name = database_name
         self.day_collection_name = day_collection_name
         self.connected = False
         self.client = None
