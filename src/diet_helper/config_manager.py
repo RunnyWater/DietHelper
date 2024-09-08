@@ -2,6 +2,28 @@ import configparser
 from pathlib import Path
 import socket
 
+def urgent_set_database_name(cfg):
+    user_input = input("\nPlease enter database name \nor 'q' to exit to main menu and change the database type to Local: ")
+    if user_input.lower() == 'q':
+        cfg.set_database_option('database_type', '1')
+        return 205
+    else:
+        database_name = user_input
+        cfg.set_database_option('database_name', database_name)
+        return 200
+
+def urgent_set_connection_string(cfg):
+    user_input = input("\nPlease enter connection string \nor 'q' to exit to main menu and change the database type to Local: ")
+    if user_input.lower() == 'q':
+        cfg.set_database_option('database_type', '1')
+        return 205
+    else:
+        con_string = user_input
+        cfg.set_database_option('con_string', con_string)
+        return 200
+
+
+
 class Config:
     _instance = None
     def __new__(cls, config_file='config.cfg'):
@@ -44,7 +66,7 @@ class Config:
 
     def set_user_name(self, value):
         section = 'user'
-        option = 'name'
+        option = 'user_name'
         self.config.set(section, option, value)
         self.save()
 
