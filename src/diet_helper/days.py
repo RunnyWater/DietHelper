@@ -1,6 +1,6 @@
 from .day_database import MongoDayManager, JsonDayManager
 from .foods import Foods
-
+from .getting_date import *
 from datetime import datetime
 
 
@@ -47,32 +47,75 @@ class Days:
         return days 
 
 
-    def add_meal(self, date:str | datetime, meals:dict):
-        if date not in self.days:
-            print("Day does not exist")
-            return 
-        self.days[date].add_meal(meals)
-        self.__manager.add_day(date, self.days[date].meals)
+    def add_meal(self):
+    
+        date = get_choice_date(self.days)
 
-    def add_day(self, date:str | datetime = get_todays_date() , meals:list[dict] = []):
-        date = from_string_to_date(date)
+        meals = {}
+
+        print("Now please fill in the meal information: ")
+        while True:
+            food_name = input("Food name (q for quit): ")
+            if food_name == 'q':
+                break
+            weight = input("Weight (r to restart the food): ")
+            if weight== 'r':
+                break
+            food_weight = int(weight)
+            meals[food_name] = food_weight
+
+        self.days[date].add_meal(meals)
+        self.__manager.add_meal(date, self.days[date].meals)
+
+    def add_day(self):
+        year, month, day = get_user_input_date()
+        if year == False or month == False or day == False:
+            return
+        date = str(datetime(year, month, day))
+        meals = {}
+
+        print("Now please fill in the meal information: ")
+        while True:
+            food_name = input("Food name (q for quit): ")
+            if food_name == 'q':
+                break
+            weight = input("Weight (r to restart the food): ")
+            if weight== 'r':
+                break
+            food_weight = int(weight)
+            meals[food_name] = food_weight
+
         self.__manager.add_day(date, meals)
         self.days[date] = Day(meals, date, self.foods)
 
 
-    def get_total_macros_by_date(self, date:str | datetime):
-        date = from_string_to_date(date)
-        if date not in list(self.days.keys()):
-            print("Day does not exist")
-            return 
-        return self.days[date].get_total_macros()
+    def get_total_macros_by_date(self):
+        date = get_choice_date(self.days)
+        macros = self.days[date].get_total_macros()
+        print(macros)
+        return macros
     
-    def get_meal_macros_by_date(self, date:str | datetime, meal_number:int = 0):
-        date = from_string_to_date(date)
-        if date not in list(self.days.keys()):
-            print("Day does not exist")
-            return 
-        return self.days[date].get_meals_macros(meal_number)
+    def get_meal_macros_by_date(self):
+        date = get_choice_date(self.days)
+        meals = self.days[date].meals
+        if len(meals) == 0:
+            print("There are no meals in this day yet")
+            return
+        str_meals = '\n'.join([f'{i+1}: {meal}' for i, meal in enumerate(meals)])
+        print(str_meals)
+        while True:
+            user_input = input("Please choose one of the meals (q for exiting): ")
+            if user_input == 'q':
+                print('Exiting...')
+                return
+            elif user_input.isdigit() and int(user_input) in range(1, len(meals)+1):
+                meal_number = int(user_input)
+                break
+            else:
+                print("Invalid input")
+        macros = self.days[date].get_meals_macros(meal_number-1)
+        print(macros)
+        return macros
 
     def get_all_meals_macros_by_date(self, date:str | datetime):
         date = from_string_to_date(date)
@@ -81,6 +124,7 @@ class Days:
             return 
         
         macros = self.days[date].get_all_meals_macros()
+        print(macros)
         return macros
 
     def add_food_to_day(self, date:str | datetime, meal_number:int, food_name:str, weight:float):

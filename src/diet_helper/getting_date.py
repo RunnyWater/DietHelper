@@ -1,5 +1,5 @@
 def get_user_input_date() -> list[int]:
-    print("Please provide the information in numbers: year, month, day ( for quit)")
+    print("Please provide the information in numbers: year, month, day (q for quit)")
     try:    
         year = int(input("Year: "))
         month = int(input("Month: "))
@@ -23,6 +23,7 @@ def get_choice_date(days:dict) -> str:
         if user_input == 'q':
             break
         elif user_input.isdigit() and int(user_input) in dates.keys():
+            user_input = int(user_input)
             break
         else:
             print("Invalid input")
